@@ -1,19 +1,17 @@
 import { type NextPage } from "next";
 import Head from "next/head";
-import { useState } from "react";
-import Admin from "~/comp/Admin";
-import NoAuth from "~/comp/NoAuth";
+import { useRouter } from "next/router";
+import Collab from "~/comp/Collab";
 
-// import { api } from "~/utils/api";
-
-const Home: NextPage = () => {
-  // const hello = api.example.hello.useQuery({ text: "from tRPC" });
-  const [isAdmin, setIsAdmin] = useState(true);
+const Note: NextPage = () => {
+  const router = useRouter();
+  const { noteid } = router.query;
+  console.log(noteid);
 
   return (
     <>
       <Head>
-        <title>smart-down</title>
+        <title>smart-down collab</title>
         <meta
           name="description"
           content="self hosted note taking app for collaboration"
@@ -21,10 +19,10 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="flex min-h-screen flex-col items-center justify-center">
-        {isAdmin ? <Admin /> : <NoAuth />}
+        <Collab />
       </main>
     </>
   );
 };
 
-export default Home;
+export default Note;
