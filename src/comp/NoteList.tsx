@@ -1,50 +1,28 @@
 import { useState } from "react";
 import { api } from "~/utils/api";
-
-interface Note {
-  id: string;
-  title: string;
-  content: string;
-}
+import { Note } from "~/utils/types";
 
 export default function NoteList() {
   // get all notes
   // redirect to notes
 
   const [currentNote, setCurrentNote] = useState("");
+  const [notes, setNotes] = useState<Note[]>([]);
 
-  const createQuery = api.note.create.useQuery(
-    // @ts-ignore
-    {},
-    {
-      enabled: false,
-      onSuccess: (data) => {
-        console.log("created note:", data);
-        setCurrentNote(data);
-      },
-    }
-  );
+  const getAllQuery = api.note.getAll.useQuery(undefined, {
+    onSuccess: (res) => setNotes(res),
+  });
 
-  const notes: Note[] = [
-    {
-      id: "12b3602b-fb94-4064-831f-4b72465ed83f",
-      title: "Sample note",
-      content: "# Sample note\nthis is a note\n- in markdown format",
+  const createQuery = api.note.create.useQuery(undefined, {
+    enabled: false,
+    onSuccess: (data) => {
+      console.log("created note:", data);
+      window.location.href = `/${data}`;
     },
-    {
-      id: "84544b50-53a7-4bf8-8ca7-aca174f4a3b0",
-      title: "Todos",
-      content: "# Just some todos\n- first todo\n- second todo\n- third todo",
-    },
-  ];
+  });
 
   async function newNote() {
-    // todo: does not work
     await createQuery.refetch();
-
-    // if (createQuery.data) {
-    //   // window.location.href = `/${newUuid}`;
-    // }
   }
 
   return (
@@ -66,7 +44,7 @@ export default function NoteList() {
             {notes.map((n) => (
               <tr key={n.id} className="hover">
                 <td>
-                  <a href={`/${n.id}`} className="h-full w-full bg-green-500">
+                  <a href={`/${n.id}`} className="h-full w-full">
                     {n.title}
                   </a>
                 </td>
