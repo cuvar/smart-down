@@ -25,12 +25,17 @@ export default function Editor(props: Props) {
         id=""
         cols={30}
         rows={10}
-        className="textarea-bordered textarea bg-yellow-100 p-4"
+        className="textarea-bordered textarea bg-yellow-100 p-4 leading-relaxed text-gray-600 selection:bg-gray-300 selection:text-slate-900"
         placeholder="Notes"
         defaultValue={content}
         onChange={(e) => setContent(e.target.value)}
       ></textarea>
-      <button onClick={() => saveContent()}>save</button>
+      <button
+        onClick={() => saveContent()}
+        className="hover:text-gray-300 active:text-gray-500"
+      >
+        save
+      </button>
     </>
   );
 }
