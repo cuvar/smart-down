@@ -5,10 +5,7 @@ import Admin from "~/comp/Admin";
 import NoAuth from "~/comp/NoAuth";
 import NoteList from "~/comp/NoteList";
 
-// import { api } from "~/utils/api";
-
 const Home: NextPage = () => {
-  // const hello = api.example.hello.useQuery({ text: "from tRPC" });
   const [isAdmin, setIsAdmin] = useState(true);
 
   return (

@@ -1,3 +1,6 @@
+import { useState } from "react";
+import { api } from "~/utils/api";
+
 interface Note {
   id: string;
   title: string;
@@ -7,6 +10,20 @@ interface Note {
 export default function NoteList() {
   // get all notes
   // redirect to notes
+
+  const [currentNote, setCurrentNote] = useState("");
+
+  const createQuery = api.note.create.useQuery(
+    // @ts-ignore
+    {},
+    {
+      enabled: false,
+      onSuccess: (data) => {
+        console.log("created note:", data);
+        setCurrentNote(data);
+      },
+    }
+  );
 
   const notes: Note[] = [
     {
@@ -21,11 +38,13 @@ export default function NoteList() {
     },
   ];
 
-  function newNote() {
-    // todo: on backend
-    // const newUuid = crypto.randomUUID();
-    // console.log("new note:", newUuid);
-    // window.location.href = `/${newUuid}`;
+  async function newNote() {
+    // todo: does not work
+    await createQuery.refetch();
+
+    // if (createQuery.data) {
+    //   // window.location.href = `/${newUuid}`;
+    // }
   }
 
   return (
@@ -55,6 +74,7 @@ export default function NoteList() {
             ))}
           </tbody>
         </table>
+        <div>{currentNote}</div>
       </div>
     </div>
   );
