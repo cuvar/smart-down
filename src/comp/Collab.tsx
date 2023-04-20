@@ -1,6 +1,11 @@
 import Editor from "./Editor";
+import { Note } from "~/utils/types";
 
-export default function Collab() {
+interface Props {
+  note: Note | undefined;
+}
+
+export default function Collab(props: Props) {
   const backIcon = (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -25,7 +30,11 @@ export default function Collab() {
         <span>back</span>
       </a>
       <h1 className="text-2xl font-bold">Collab mode</h1>
-      <Editor />
+      {!props.note ? (
+        <div>This note does not exist</div>
+      ) : (
+        <Editor note={props.note} />
+      )}
     </div>
   );
 }
