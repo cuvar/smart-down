@@ -25,7 +25,10 @@ export default function Collab(props: Props) {
 
   return (
     <div className="flex flex-col items-center space-y-4">
-      <a href="/" className="flex space-x-2">
+      <a
+        href="/"
+        className="flex space-x-2 hover:text-gray-300 active:text-gray-500"
+      >
         <span>{backIcon}</span>
         <span>back</span>
       </a>
