@@ -44,21 +44,14 @@ export const noteRouter = createTRPCRouter({
         throw error;
       }
     }),
-  setTitle: publicProcedure
-    .input(z.object({ title: z.string() }))
-    .mutation(({ input }) => {
-      // return {
-      //   greeting: `Hello ${input.text}`,
-      // };
-      // todo:
-    }),
   setContent: publicProcedure
     .input(z.object({ id: z.string(), content: z.string() }))
     .mutation(({ input }) => {
-      // return {
-      //   greeting: `Hello ${input.text}`,
-      // };
-      // todo:
+      if (!fs.existsSync(NOTES_DIR)) {
+        fs.mkdirSync(NOTES_DIR);
+      }
+
+      fs.writeFileSync(`${NOTES_DIR}/${input.id}${EXT}`, input.content);
     }),
 });
 
