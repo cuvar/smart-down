@@ -34,15 +34,11 @@ export const noteRouter = createTRPCRouter({
   getNote: publicProcedure
     .input(z.object({ id: z.string() }))
     .query(({ input }) => {
-      try {
-        const note = getNote(NOTES_DIR, input.id);
-        if (note == null) {
-          throw new Error("Note not found");
-        }
-        return note;
-      } catch (error) {
-        throw error;
+      const note = getNote(NOTES_DIR, input.id);
+      if (note == null) {
+        throw new Error("Note not found");
       }
+      return note;
     }),
   setContent: publicProcedure
     .input(z.object({ id: z.string(), content: z.string() }))
@@ -52,6 +48,15 @@ export const noteRouter = createTRPCRouter({
       }
 
       fs.writeFileSync(`${NOTES_DIR}/${input.id}${EXT}`, input.content);
+    }),
+  delete: publicProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(({ input }) => {
+      if (!fs.existsSync(NOTES_DIR)) {
+        throw new Error("Notes directory does not exist");
+      }
+
+      fs.unlinkSync(`${NOTES_DIR}/${input.id}${EXT}`);
     }),
 });
 
