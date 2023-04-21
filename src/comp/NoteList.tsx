@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { api } from "~/utils/api";
 import { Note } from "~/server/note";
+import { signOut } from "next-auth/react";
 
 const trashIcon = (
   <svg
@@ -20,9 +21,6 @@ const trashIcon = (
 );
 
 export default function NoteList() {
-  // get all notes
-  // redirect to notes
-
   // todo: implement collaboration with other users through links
 
   const [currentNote, setCurrentNote] = useState("");
@@ -54,7 +52,12 @@ export default function NoteList() {
   return (
     <div className="flex w-full max-w-2xl flex-col items-center space-y-4 px-10">
       <div className="flex w-full justify-between">
-        <h1 className="w-full text-2xl font-bold">Your notes</h1>
+        <div className="flex flex-col items-start mx-2">
+          <h1 className="w-full text-2xl font-bold">Your notes</h1>
+          <button className="hover:text-gray-300 active:text-gray-500" onClick={() => signOut()}>
+            Log out
+          </button>
+        </div>
         <button className="btn-outline btn" onClick={newNote}>
           new note
         </button>

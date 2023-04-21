@@ -3,6 +3,7 @@ import { Note } from "~/server/note";
 
 interface Props {
   note: Note | undefined;
+  isAdmin: boolean;
 }
 
 export default function Collab(props: Props) {
@@ -32,11 +33,28 @@ export default function Collab(props: Props) {
         <span>{backIcon}</span>
         <span>back</span>
       </a>
-      <h1 className="text-2xl font-bold">Collab mode</h1>
+      {props.isAdmin ? (
+        <div className="flex flex-col justify-center">
+          <h1 className="text-2xl font-bold">Admin mode</h1>
+          <button className="hover:text-gray-300 active:text-gray-500" onClick={() => signOut()}>
+              Log out
+            </button>
+        </div>
+      ) : (
+        <h1 className="text-2xl font-bold">Collab mode</h1>
+      )}
       {!props.note ? (
         <div>This note does not exist</div>
       ) : (
         <Editor note={props.note} />
+      )}
+      {props.isAdmin && (
+        <div className="flex">
+          <button className="btn-outline btn-error btn">
+            Stop collaboration
+          </button>
+          <button className="btn-outline btn-primary btn">share</button>
+        </div>
       )}
     </div>
   );

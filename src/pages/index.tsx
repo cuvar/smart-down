@@ -6,10 +6,7 @@ import NoAuth from "~/comp/NoAuth";
 import NoteList from "~/comp/NoteList";
 
 const Home: NextPage = () => {
-  // todo: implement auth
-  const [isAdmin, setIsAdmin] = useState(true);
   const { data: sessionData } = useSession();
-  console.log(sessionData);
 
   return (
     <>
@@ -22,7 +19,7 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="flex min-h-screen flex-col items-center justify-center">
-        {isAdmin ? <NoteList /> : <NoAuth />}
+        {sessionData ? <NoteList /> : <NoAuth />}
       </main>
     </>
   );
