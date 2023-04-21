@@ -1,3 +1,4 @@
+import { signOut } from "next-auth/react";
 import Editor from "./Editor";
 import { Note } from "~/server/note";
 
