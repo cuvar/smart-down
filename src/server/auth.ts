@@ -4,7 +4,7 @@ import {
   type NextAuthOptions,
   type DefaultSession,
 } from "next-auth";
-import DiscordProvider from "next-auth/providers/discord";
+import CredentialsProvider from "next-auth/providers/credentials";
 import { env } from "~/env.mjs";
 
 /**
@@ -13,20 +13,20 @@ import { env } from "~/env.mjs";
  *
  * @see https://next-auth.js.org/getting-started/typescript#module-augmentation
  */
-declare module "next-auth" {
-  interface Session extends DefaultSession {
-    user: {
-      id: string;
-      // ...other properties
-      // role: UserRole;
-    } & DefaultSession["user"];
-  }
+// declare module "next-auth" {
+//   interface Session extends DefaultSession {
+//     user: {
+//       id: string;
+//       // ...other properties
+//       // role: UserRole;
+//     } & DefaultSession["user"];
+//   }
 
   // interface User {
   //   // ...other properties
   //   // role: UserRole;
   // }
-}
+// }
 
 /**
  * Options for NextAuth.js used to configure adapters, providers, callbacks, etc.
@@ -34,20 +34,34 @@ declare module "next-auth" {
  * @see https://next-auth.js.org/configuration/options
  */
 export const authOptions: NextAuthOptions = {
-  callbacks: {
-    session: ({ session, user }) => ({
-      ...session,
-      user: {
-        ...session.user,
-        id: user.id,
+  // callbacks: {
+  //   session: ({ session, user }) => ({
+  //     ...session,
+  //     user: {
+  //       ...session.user,
+  //       id: user.id,
+  //     },
+  //   }),
+  // },
+  providers: [
+    CredentialsProvider({
+      name: "Credentials",
+      credentials: {
+        username: { label: "Username", type: "text", placeholder: "jsmith" },
+        password: { label: "Password", type: "password" },
+      },
+      async authorize(credentials, req) {
+        if (credentials?.username != env.USERNAME) {
+          return null;
+        }
+      
+        if (credentials?.password != env.PASSWORD) {
+          return null;
+        }
+      
+        return { id: "1", name: "cuvar", email: "luca@cuvar.dev" };
       },
     }),
-  },
-  providers: [
-    // DiscordProvider({
-    //   clientId: env.DISCORD_CLIENT_ID,
-    //   clientSecret: env.DISCORD_CLIENT_SECRET,
-    // }),
     /**
      * ...add more providers here.
      *
