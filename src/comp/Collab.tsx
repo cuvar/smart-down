@@ -1,5 +1,5 @@
 import Editor from "./Editor";
-import { Note } from "~/utils/types";
+import { Note } from "~/server/note";
 
 interface Props {
   note: Note | undefined;

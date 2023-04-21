@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { api } from "~/utils/api";
-import { Note } from "~/utils/types";
+import { Note } from "~/server/note";
 
 const trashIcon = (
   <svg
