@@ -1,12 +1,15 @@
 import { type NextPage } from "next";
+import { useSession } from "next-auth/react";
 import Head from "next/head";
 import { useState } from "react";
-import Admin from "~/comp/Admin";
 import NoAuth from "~/comp/NoAuth";
 import NoteList from "~/comp/NoteList";
 
 const Home: NextPage = () => {
+  // todo: implement auth
   const [isAdmin, setIsAdmin] = useState(true);
+  const { data: sessionData } = useSession();
+  console.log(sessionData);
 
   return (
     <>
