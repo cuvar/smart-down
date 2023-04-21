@@ -23,6 +23,8 @@ export default function NoteList() {
   // get all notes
   // redirect to notes
 
+  // todo: implement collaboration with other users through links
+
   const [currentNote, setCurrentNote] = useState("");
   const [notes, setNotes] = useState<Note[]>([]);
 
