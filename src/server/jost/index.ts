@@ -39,6 +39,10 @@ class jsot {
     this.operations.push(op);
   }
 
+  setContent(content: string) {
+    this.content = content;
+  }
+
   execute(): string {
     const ops = [...this.operations];
 
