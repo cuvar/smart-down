@@ -2,6 +2,7 @@ import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import jsot, { JostOperation } from "~/server/jost";
 import { NoteRepository } from "~/server/note/repository";
+import { findDeletion, findInsertion } from "~/utils/string";
 
 const noteRepository = new NoteRepository();
 const storeMap = new Map<string, jsot>();
@@ -58,21 +59,18 @@ export const noteRouter = createTRPCRouter({
       noteRepository.deleteNote(input.id);
     }),
   addInsertOperation: publicProcedure
-    .input(z.object({ id: z.string(), pos: z.number(), content: z.string() }))
-    .mutation(({ input }) => {
-      let store = storeMap.get(input.id);
-      if (typeof store === "undefined") {
-        store = new jsot("");
-        storeMap.set(input.id, store);
-      }
-      store.insert(input.pos, input.content);
-    }),
-  addDeleteOperation: publicProcedure
-    .input(z.object({ id: z.string(), pos: z.number(), len: z.number() }))
+    .input(z.object({ id: z.string(), before: z.string(), after: z.string() }))
     .mutation(({ input }) => {
       const store = getStoreById(input.id);
-      store.delete(input.pos, input.len);
-      console.log(store);
+      const insertion = findInsertion(input.before, input.after);
+      store.insert(insertion.position, insertion.text);
+    }),
+  addDeleteOperation: publicProcedure
+    .input(z.object({ id: z.string(), before: z.string(), after: z.string() }))
+    .mutation(({ input }) => {
+      const store = getStoreById(input.id);
+      const deletion = findDeletion(input.before, input.after);
+      store.delete(deletion.position, deletion.length);
     }),
 });
 
