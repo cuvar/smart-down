@@ -52,9 +52,12 @@ export default function NoteList() {
   return (
     <div className="flex w-full max-w-2xl flex-col items-center space-y-4 px-10">
       <div className="flex w-full justify-between">
-        <div className="flex flex-col items-start mx-2">
+        <div className="mx-2 flex flex-col items-start">
           <h1 className="w-full text-2xl font-bold">Your notes</h1>
-          <button className="hover:text-gray-300 active:text-gray-500" onClick={() => signOut()}>
+          <button
+            className="hover:text-gray-300 active:text-gray-500"
+            onClick={() => signOut()}
+          >
             Log out
           </button>
         </div>
