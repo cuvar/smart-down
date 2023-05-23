@@ -9,8 +9,10 @@ interface Props {
 export default function Editor(props: Props) {
   const [content, setContent] = useState(props.note.content);
   const [deleteTextBefore, setDeleteTextBefore] = useState(content);
+  const [insertionTextBefore, setInsertionTextBefore] = useState(content);
   const saveMutation = api.note.save.useMutation();
   const addDeleteOperationMutation = api.note.addDeleteOperation.useMutation();
+  const addInsertOperationMutation = api.note.addInsertOperation.useMutation();
 
   function saveContent() {
     console.log("saving");
@@ -33,6 +35,7 @@ export default function Editor(props: Props) {
       console.log(deletion);
 
       setDeleteTextBefore(content);
+      setInsertionTextBefore(content);
       addDeleteOperationMutation.mutate({
         id: props.note.id,
         pos: deletion.position,
@@ -40,19 +43,48 @@ export default function Editor(props: Props) {
       });
     } else {
       setDeleteTextBefore(content);
+      const insertion = findInsertion(insertionTextBefore, content);
+      addInsertOperationMutation.mutate({
+        id: props.note.id,
+        pos: insertion.position,
+        content: insertion.text,
+      });
+      setInsertionTextBefore(content);
     }
   }
 
   function findDeletion(
-    s1: string,
-    s2: string
+    oldString: string,
+    newString: string
   ): { position: number; length: number } {
-    console.log(s1);
-    console.log(s2);
-    for (let i = 0; i < s1.length; i++) {
-      for (let j = i + 1; j <= s1.length; j++) {
-        const temp = s1.slice(0, i) + s1.slice(j);
-        if (temp === s2) {
+    const res = findDifference(oldString, newString);
+    return res;
+  }
+
+  function findInsertion(
+    oldString: string,
+    newString: string
+  ): { position: number; text: string } {
+    const res = findDifference(newString, oldString); // needs to be reversed
+
+    if (res.position === -1) {
+      return { position: res.position, text: "" };
+    }
+
+    const substr = newString.slice(res.position, res.position + res.length);
+    return { position: res.position, text: substr };
+  }
+
+  function findDifference(
+    long: string,
+    short: string
+  ): { position: number; length: number } {
+    console.log(long);
+    console.log(short);
+    for (let i = 0; i < long.length; i++) {
+      for (let j = i + 1; j <= long.length; j++) {
+        const temp = long.slice(0, i) + long.slice(j);
+        if (temp === short) {
           return { position: i, length: j - i };
         }
       }
