@@ -2,7 +2,6 @@ import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import jsot, { JostOperation } from "~/server/jost";
 import { NoteRepository } from "~/server/note/repository";
-import { isShareable } from "~/server/note/utils";
 import { findDeletion, findInsertion } from "~/utils/string";
 
 const noteRepository = new NoteRepository();
@@ -43,10 +42,18 @@ export const noteRouter = createTRPCRouter({
 
       return note;
     }),
+  getMeta: publicProcedure.query(() => {
+    return noteRepository.getMeta();
+  }),
   isShareable: publicProcedure
     .input(z.object({ id: z.string() }))
     .query(({ input }) => {
-      return isShareable(input.id);
+      return noteRepository.isShareable(input.id);
+    }),
+  setShareable: publicProcedure
+    .input(z.object({ id: z.string(), value: z.boolean() }))
+    .mutation(({ input }) => {
+      noteRepository.setShareable(input.id, input.value);
     }),
   save: publicProcedure
     .input(z.object({ id: z.string(), content: z.string() }))

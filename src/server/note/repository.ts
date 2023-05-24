@@ -1,10 +1,11 @@
 import * as fs from "fs";
 import * as crypto from "crypto";
-import { Note } from "~/server/note/utils";
+import { Note, NoteMeta, isValidMetaFile } from "~/server/note/utils";
 import { parseTitle } from "./utils";
 
 const NOTES_DIR = "notes";
 const EXT = ".note";
+const META_FILE = "./src/meta.json";
 
 export interface NoteRepositoryInterface {
   createNote(): string;
@@ -12,6 +13,9 @@ export interface NoteRepositoryInterface {
   setContent(id: string, content: string): void;
   getNote(id: string): Note;
   getAllNotes(): Note[];
+  setShareable(id: string, shareable: boolean): void;
+  isShareable(id: string): boolean;
+  getMeta(): NoteMeta;
 }
 
 export class NoteRepository implements NoteRepositoryInterface {
@@ -98,5 +102,37 @@ export class NoteRepository implements NoteRepositoryInterface {
     });
 
     return mapped;
+  }
+  setShareable(id: string, shareable: boolean): void {
+    const data = fs.readFileSync(META_FILE, "utf8");
+    const json = JSON.parse(data);
+    if (!isValidMetaFile(json)) return; // TODO: throw error
+
+    if (json.shareable.includes(id) && shareable) return;
+    if (!json.shareable.includes(id) && !shareable) return;
+    if (json.shareable.includes(id) && !shareable) {
+      json.shareable.splice(json.shareable.indexOf(id), 1);
+      fs.writeFileSync(META_FILE, JSON.stringify(json));
+      return;
+    }
+    if (!json.shareable.includes(id) && shareable) {
+      json.shareable.push(id);
+      fs.writeFileSync(META_FILE, JSON.stringify(json));
+      return;
+    }
+  }
+  isShareable(id: string): boolean {
+    try {
+      const meta = this.getMeta();
+      return meta.shareable.includes(id);
+    } catch (e) {
+      return false;
+    }
+  }
+  getMeta(): NoteMeta {
+    const data = fs.readFileSync(META_FILE, "utf8");
+    const json = JSON.parse(data);
+    if (!isValidMetaFile(json)) throw new Error("Invalid meta file");
+    return json;
   }
 }

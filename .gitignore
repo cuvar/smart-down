@@ -43,3 +43,5 @@ yarn-error.log*
 
 # custom
 **/*.note
+
+**/meta.json
