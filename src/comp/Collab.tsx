@@ -1,6 +1,7 @@
 import { signOut } from "next-auth/react";
 import Editor from "./Editor";
 import { Note } from "~/server/note";
+import { api } from "~/utils/api";
 
 interface Props {
   note: Note | undefined;
@@ -25,6 +26,21 @@ export default function Collab(props: Props) {
     </svg>
   );
 
+  const setShareableMutation = api.note.setShareable.useMutation({
+    onSuccess() {
+      isShareableQuery.refetch();
+    },
+  });
+  const isShareableQuery = api.note.isShareable.useQuery({
+    id: props.note?.id ?? "",
+  });
+
+  function setShareable(value: boolean) {
+    setShareableMutation.mutate({
+      id: props.note?.id ?? "",
+      value: value,
+    });
+  }
   return (
     <div className="flex w-full max-w-3xl flex-col items-center space-y-4 px-10">
       <a
@@ -53,11 +69,22 @@ export default function Collab(props: Props) {
         <Editor note={props.note} />
       )}
       {props.isAdmin && (
-        <div className="flex">
-          <button className="btn-outline btn-error btn">
-            Stop collaboration
-          </button>
-          <button className="btn-outline btn">share</button>
+        <div className="flex space-x-4">
+          {isShareableQuery.data ? (
+            <button
+              className="btn-outline btn-error btn"
+              onClick={() => setShareable(false)}
+            >
+              Stop collaboration
+            </button>
+          ) : (
+            <button
+              className="btn-outline btn-success btn"
+              onClick={() => setShareable(true)}
+            >
+              Share
+            </button>
+          )}
         </div>
       )}
     </div>
