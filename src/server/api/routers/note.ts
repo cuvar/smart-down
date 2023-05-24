@@ -2,6 +2,7 @@ import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import jsot, { JostOperation } from "~/server/jost";
 import { NoteRepository } from "~/server/note/repository";
+import { isShareable } from "~/server/note/utils";
 import { findDeletion, findInsertion } from "~/utils/string";
 
 const noteRepository = new NoteRepository();
@@ -41,6 +42,11 @@ export const noteRouter = createTRPCRouter({
       }
 
       return note;
+    }),
+  isShareable: publicProcedure
+    .input(z.object({ id: z.string() }))
+    .query(({ input }) => {
+      return isShareable(input.id);
     }),
   save: publicProcedure
     .input(z.object({ id: z.string(), content: z.string() }))
@@ -82,3 +88,5 @@ function getStoreById(id: string): jsot {
   }
   return store;
 }
+
+// todo: OT wont quite work when inserting at the same position

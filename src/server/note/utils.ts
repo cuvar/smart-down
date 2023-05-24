@@ -8,3 +8,8 @@ export declare interface Note {
   title: string;
   content: string;
 }
+
+export function isShareable(id: string): boolean {
+  // todo: implement
+  return false;
+}
