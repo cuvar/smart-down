@@ -9,7 +9,19 @@ interface Props {
 export default function Editor(props: Props) {
   const [content, setContent] = useState(props.note.content);
   const [textBefore, setTextBefore] = useState(content);
-  const saveMutation = api.note.save.useMutation();
+  const getQuery = api.note.getNote.useQuery(
+    { id: props.note.id },
+    {
+      onSuccess: (res) => {
+        setContent(res.content);
+        setTextBefore(res.content);
+      },
+    }
+  );
+
+  const saveMutation = api.note.save.useMutation({
+    onSuccess: () => getQuery.refetch(),
+  });
   const addDeleteOperationMutation = api.note.addDeleteOperation.useMutation();
   const addInsertOperationMutation = api.note.addInsertOperation.useMutation();
 
@@ -35,8 +47,11 @@ export default function Editor(props: Props) {
 
       setTextBefore(content);
     } else {
-      console.log("inserting");
+      if (textBefore === content) {
+        return;
+      }
 
+      console.log("inserting");
       addInsertOperationMutation.mutate({
         id: props.note.id,
         before: textBefore,
