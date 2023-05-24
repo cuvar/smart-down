@@ -67,9 +67,9 @@ export default function Editor(props: Props) {
       <textarea
         name=""
         id="note-area"
-        cols={30}
+        // cols={50}
         rows={10}
-        className="textarea-bordered textarea bg-yellow-100 p-4 leading-relaxed text-gray-600 selection:bg-gray-300 selection:text-slate-900"
+        className="textarea-bordered textarea w-full bg-yellow-100 p-4 leading-relaxed text-gray-600 selection:bg-gray-300 selection:text-slate-900"
         placeholder="Notes"
         defaultValue={content}
         onChange={(e) => setContent(e.target.value)}
