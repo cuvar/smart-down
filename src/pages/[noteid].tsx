@@ -17,6 +17,10 @@ const Note: NextPage = () => {
     id: typeof noteid == "string" ? noteid : "",
   });
 
+  const isShareableQuery = api.note.isShareable.useQuery({
+    id: typeof noteid == "string" ? noteid : "",
+  });
+
   return (
     <>
       <Head>
@@ -28,9 +32,22 @@ const Note: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="flex min-h-screen flex-col items-center justify-center">
-        <Collab note={getNoteQuery.data} isAdmin={sessionData != null} />
+        {sessionData == null && !isShareableQuery.data ? (
+          <NotFound />
+        ) : (
+          <Collab note={getNoteQuery.data} isAdmin={sessionData != null} />
+        )}
       </main>
     </>
+  );
+};
+
+const NotFound = () => {
+  return (
+    <div className="flex flex-col items-center space-y-10">
+      <h3 className="text-3xl font-bold">Not allowed</h3>
+      <p className="text-lg">Sorry, you're not allowed to view this :(</p>
+    </div>
   );
 };
 
