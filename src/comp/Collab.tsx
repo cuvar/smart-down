@@ -26,7 +26,7 @@ export default function Collab(props: Props) {
   );
 
   return (
-    <div className="flex flex-col items-center space-y-4">
+    <div className="flex w-full max-w-3xl flex-col items-center space-y-4 px-10">
       <a
         href="/"
         className="flex space-x-2 hover:text-gray-300 active:text-gray-500"
