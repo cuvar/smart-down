@@ -5,12 +5,15 @@ This is a simple demonstration app of how distributed note-taking apps can work 
 ## Getting started
 First, clone the repo and install all dependencies using `npm install`.
 
+Then, rename the `.env.example` to `.env` and set the username and password as well as other values.
+
 For testing purposes, you can run the app locally using `npm run dev`. This will start the app on port 3000. You can then access the app via `http://localhost:3000`.
 
 For production, you can build the app using `npm run build` and then start it using `npm start`. The app will then be available on port 3000. 
 
 ## Functionalities
-smart-down is a simple note-taking app, that stores all notes locally on the server. Hence, no database is needed. The app uses basic auth for administration purposes. Rename the `.env.example` to `.env` and set the username and password as well as other values. An administrator can 
+smart-down is a simple note-taking app, that stores all notes locally on the server. Hence, no database is needed. The app uses basic auth for administration purposes. An administrator can 
+
 - create new notes
 - control whether they are publicly accessible or not
 - delete notes

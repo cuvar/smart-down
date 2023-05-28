@@ -22,10 +22,10 @@ import { env } from "~/env.mjs";
 //     } & DefaultSession["user"];
 //   }
 
-  // interface User {
-  //   // ...other properties
-  //   // role: UserRole;
-  // }
+// interface User {
+//   // ...other properties
+//   // role: UserRole;
+// }
 // }
 
 /**
@@ -54,12 +54,12 @@ export const authOptions: NextAuthOptions = {
         if (credentials?.username != env.USERNAME) {
           return null;
         }
-      
+
         if (credentials?.password != env.PASSWORD) {
           return null;
         }
-      
-        return { id: "1", name: "cuvar", email: "luca@cuvar.dev" };
+
+        return { id: "1", name: env.USERNAME };
       },
     }),
     /**
